@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import com.mbialowas.moviehub2025.Navigation.BottomNav
+import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.destinations.Destination
 import com.mbialowas.moviehub2025.screens.MovieScreen
 import com.mbialowas.moviehub2025.screens.*
@@ -32,9 +33,9 @@ class MainActivity : ComponentActivity() {
             MovieHub2025Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
-                    //MovieScreen(modifier = Modifier.padding(innerPadding))
-                    //WatchScreen(modifier = Modifier.padding(innerPadding))
-                    App(navController = navController, modifier = Modifier.padding(innerPadding))
+                    val moviesManager = MoviesManager()
+
+                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager)
                 }
             }
         }
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier = Modifier){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,7 +58,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier){
             navController = navController as NavHostController, startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen()
+                MovieScreen(moviesManager = moviesManager)
             }
             composable(Destination.Watch.route) {
                 WatchScreen()
