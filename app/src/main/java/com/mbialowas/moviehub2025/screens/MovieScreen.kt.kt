@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.model.Movie
 
