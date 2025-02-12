@@ -45,6 +45,10 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
 
+    // coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
