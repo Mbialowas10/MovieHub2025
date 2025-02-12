@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 
 import com.mbialowas.moviehub2025.Navigation.BottomNav
 import com.mbialowas.moviehub2025.api.MoviesManager
+import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.destinations.Destination
 import com.mbialowas.moviehub2025.screens.MovieScreen
 import com.mbialowas.moviehub2025.screens.*
@@ -58,13 +59,18 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
             navController = navController as NavHostController, startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(moviesManager = moviesManager)
+                MovieScreen(navController = navController, moviesManager = moviesManager)
             }
             composable(Destination.Watch.route) {
                 WatchScreen()
             }
             composable(Destination.Search.route) {
                 SearchScreen()
+            }
+            composable(Destination.MovieDetail.route){
+                val movie = Movie(title="Fake Movie", overview="This is a much better movie than Wicked!", poster_path = "fake.png")
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie)
+
             }
         }
 

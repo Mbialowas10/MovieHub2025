@@ -3,6 +3,7 @@ package com.mbialowas.moviehub2025.screens
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -28,7 +30,7 @@ import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.model.Movie
 
 @Composable
-fun MovieScreen(modifier: Modifier = Modifier, moviesManager: MoviesManager){
+fun MovieScreen(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +46,7 @@ fun MovieScreen(modifier: Modifier = Modifier, moviesManager: MoviesManager){
         val movies = moviesManager.moviesResponse.value
         LazyColumn{
             items(movies){movie ->
-                MovieCard(movieItem = movie)
+                MovieCard(movieItem = movie, navController = navController)
                 Log.i("HTTP:", "https://image.tmdb.org/t/p/w500${movie.poster_path }")
             }
         }
@@ -54,12 +56,18 @@ fun MovieScreen(modifier: Modifier = Modifier, moviesManager: MoviesManager){
 
 @Composable
 fun MovieCard(
-    movieItem: Movie
+    movieItem: Movie,
+    navController: NavHostController
 ) {
     Column(
         modifier = Modifier
             .border(1.dp,Color.Red,shape= RoundedCornerShape(10.dp))
             .padding(5.dp)
+            .clickable {
+                Log.i("MovieCard", "Clicked ${movieItem.title}")
+                Log.i("MovieCard", "Clicked ${movieItem.id}")
+                navController.navigate("movieDetail/${movieItem.id}")
+            }
     ){
         Row(
             modifier = Modifier
