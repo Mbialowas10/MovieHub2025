@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -48,6 +49,15 @@ dependencies {
     //coil compose
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    //room
+    // room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.common)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp("androidx.room:room-compiler:2.6.1")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

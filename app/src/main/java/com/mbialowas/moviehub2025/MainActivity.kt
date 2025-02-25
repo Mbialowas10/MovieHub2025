@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 
 import com.mbialowas.moviehub2025.Navigation.BottomNav
 import com.mbialowas.moviehub2025.api.MoviesManager
+import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.destinations.Destination
 import com.mbialowas.moviehub2025.screens.MovieScreen
@@ -34,7 +35,10 @@ class MainActivity : ComponentActivity() {
             MovieHub2025Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
-                    val moviesManager = MoviesManager()
+                    // get db instance
+                    val db = AppDatabase.getInstance(applicationContext)
+                    val moviesManager = MoviesManager(db)
+
 
                     App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager)
                 }
