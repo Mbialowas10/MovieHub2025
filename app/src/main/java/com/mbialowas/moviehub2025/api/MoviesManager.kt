@@ -8,6 +8,8 @@ import androidx.compose.runtime.remember
 import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.api.model.MovieData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -15,14 +17,16 @@ import retrofit2.Response
 
 class MoviesManager(database: AppDatabase) {
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
+    private val db = database
 
     val api_key = "aaed4e12019db7b90c9cebd9c1082790"
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {
             _moviesResponse
         }
+
     init{
-        getMovies(database)
+        getMovies(db)
     }
     private fun  getMovies(database:AppDatabase){
         val service = Api.retrofitService.getTrendingMovies(api_key)
@@ -57,4 +61,11 @@ class MoviesManager(database: AppDatabase) {
     private suspend fun saveDataToDatabase(database: AppDatabase, movies: List<Movie>) {
         database.movieDoa().insertAllMovies(movies)
     }
+
+    suspend fun refreshMovies() {
+        var movies = db.movieDoa().getAllMovies()
+        _moviesResponse.value = movies
+    }
+
+
 }

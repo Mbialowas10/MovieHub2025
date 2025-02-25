@@ -1,6 +1,7 @@
 package com.mbialowas.moviehub2025.api.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,4 +17,11 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieById(id: Int): Movie?
+
+    //@Query("DELETE FROM movies WHERE id = :id")
+    @Delete
+    fun deleteMovieById(movie: Movie)
+
+    @Query("SELECT * FROM movies")
+    fun getAllMovies(): List<Movie>
 }

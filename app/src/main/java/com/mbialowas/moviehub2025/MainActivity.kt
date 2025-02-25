@@ -71,7 +71,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
             navController = navController as NavHostController, startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(navController = navController, moviesManager = moviesManager)
+                MovieScreen(navController = navController, moviesManager = moviesManager, db = db)
             }
             composable(Destination.Watch.route) {
                 WatchScreen()
