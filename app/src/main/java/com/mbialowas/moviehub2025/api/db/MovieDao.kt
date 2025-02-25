@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.mbialowas.moviehub2025.api.model.Movie
 
 @Dao
@@ -24,4 +25,8 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies")
     fun getAllMovies(): List<Movie>
+
+    @Query("UPDATE movies SET title = :newTitle, overview = :newDescription WHERE id = :movieId")
+    suspend fun updateMovie(movieId: Int, newTitle: String, newDescription: String)
+
 }

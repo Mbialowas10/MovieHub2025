@@ -9,14 +9,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -84,6 +87,7 @@ fun MovieCard(
 ) {
 
     var showDialog by remember { mutableStateOf(false) } // Manage dialog state
+    var showEditDialog by remember { mutableStateOf(false) } // Manage dialog state
 
 
     Column(
@@ -111,7 +115,9 @@ fun MovieCard(
                 contentDescription = movieItem.overview
             )
             // add in edit and delete btns
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                showEditDialog = true // trigger dialog
+            }) {
                 Text(text = "Edit")
             }
             Button(onClick = {
@@ -134,6 +140,20 @@ fun MovieCard(
                     moviesManager.refreshMovies()
                 }
                 showDialog = false
+            }
+        )
+    }
+    // Show EditMovieDialog When Button is Clicked
+    if (showEditDialog) {
+        EditMovieDialog(
+            movie = movieItem,
+            onDismiss = { showEditDialog = false },
+            onConfirmEdit = { newTitle, newDescription ->
+                CoroutineScope(GlobalScope.coroutineContext).launch {
+                    movieItem.id?.let { db.movieDoa().updateMovie(it, newTitle, newDescription) } // Update in DB
+                    moviesManager.refreshMovies() // Refresh movie list
+                }
+                showEditDialog = false
             }
         )
     }
@@ -163,5 +183,63 @@ fun DeleteMovieDialog(
         )
     }
 }
+
+@Composable
+fun EditMovieDialog(
+    movie: Movie?,
+    onDismiss: () -> Unit,
+    onConfirmEdit: (String, String) -> Unit // Pass new title & description
+) {
+    if (movie != null) {
+        var newTitle by remember { mutableStateOf(movie.title) }
+        var newDescription by remember { mutableStateOf(movie.overview) }
+
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = { Text(text = "Edit Movie") },
+            text = {
+                Column {
+                    Text(text = "Update movie details:")
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Title input field
+                    newTitle?.let {
+                        OutlinedTextField(
+                            value = it,
+                            onValueChange = { newTitle = it },
+                            label = { Text("Title") }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Description input field
+                    newDescription?.let {
+                        OutlinedTextField(
+                            value = it,
+                            onValueChange = { newDescription = it },
+                            label = { Text("Description") }
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { newTitle?.let { newDescription?.let { it1 ->
+                    onConfirmEdit(it,
+                        it1
+                    )
+                } } }) {
+                    Text("Save", color = Color.Green)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDismiss() }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
+
 
 
