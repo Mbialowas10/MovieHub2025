@@ -2,6 +2,7 @@ package com.mbialowas.moviehub2025.api.model
 
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -15,6 +16,7 @@ data class Movie(
     @Json(name = "genre_ids")
     var genreIds: List<Int?>? = null,
     @Json(name = "id")
+    @PrimaryKey(autoGenerate = false)
     var id: Int? = null,
     @Json(name = "media_type")
     var mediaType: String? = null,
