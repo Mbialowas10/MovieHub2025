@@ -13,8 +13,8 @@ data class Movie(
     var adult: Boolean? = null,
     @Json(name = "backdrop_path")
     var backdropPath: String? = null,
-    @Json(name = "genre_ids")
-    var genreIds: List<Int?>? = null,
+    //@Json(name = "genre_ids")
+    //var genreIds: List<Int?>? = null,
     @Json(name = "id")
     @PrimaryKey(autoGenerate = false)
     var id: Int? = null,

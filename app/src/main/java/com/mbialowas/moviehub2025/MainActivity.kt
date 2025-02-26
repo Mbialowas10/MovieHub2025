@@ -12,6 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,6 +30,8 @@ import com.mbialowas.moviehub2025.destinations.Destination
 import com.mbialowas.moviehub2025.screens.MovieScreen
 import com.mbialowas.moviehub2025.screens.*
 import com.mbialowas.moviehub2025.ui.theme.MovieHub2025Theme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     val db = AppDatabase.getInstance(applicationContext)
                     val moviesManager = MoviesManager(db)
 
-                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager)
+                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager,db)
                 }
             }
         }
@@ -48,7 +54,10 @@ class MainActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase){
+    var movie by remember {
+        mutableStateOf<Movie?>(null)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,9 +80,14 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
             composable(Destination.Search.route) {
                 SearchScreen()
             }
-            composable(Destination.MovieDetail.route){
-                val movie = Movie(title="Fake Movie", overview="This is a much better movie than Wicked!", poster_path = "fake.png")
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie)
+            composable(Destination.MovieDetail.route){ navBackStackEntry ->
+                val movie_id: String? = navBackStackEntry.arguments?.getString("movieID")
+                GlobalScope.launch {
+                    if (movie_id != null) {
+                        movie = db.movieDao().getMovieById(movie_id.toInt())
+                    }
+                }
+                movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db ) }
 
             }
         }
