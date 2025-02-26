@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+
+
 }
 
 android {
@@ -51,9 +53,16 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // room
+//    implementation(libs.androidx.room.runtime)
+//    implementation(libs.androidx.room.ktx)
+//    annotationProcessor(libs.androidx.room.compiler)
+
+    // room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.common)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp("androidx.room:room-compiler:2.6.1")
 
 
     implementation(libs.androidx.core.ktx)
