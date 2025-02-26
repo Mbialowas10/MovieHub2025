@@ -12,19 +12,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun WatchScreen(){
+fun WatchScreen(modifier: Modifier = Modifier){
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Green)
+
     ){
         Text(
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            textAlign =  TextAlign.Center,
-            modifier = Modifier.align(Alignment.Center),
+            textAlign = TextAlign.Center,
+            modifier = modifier.align(Alignment.Center),
             text="Watch Screen"
         )
     }
-
 }

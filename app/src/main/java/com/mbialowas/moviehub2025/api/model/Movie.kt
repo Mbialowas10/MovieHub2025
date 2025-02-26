@@ -7,33 +7,33 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Movie(
     @Json(name = "adult")
-    var adult: Boolean?,
+    var adult: Boolean? = null,
     @Json(name = "backdrop_path")
-    var backdropPath: String?,
+    var backdropPath: String? = null,
     @Json(name = "genre_ids")
-    var genreIds: List<Int?>?,
+    var genreIds: List<Int?>? = null,
     @Json(name = "id")
-    var id: Int?,
+    var id: Int? = null,
     @Json(name = "media_type")
-    var mediaType: String?,
+    var mediaType: String? = null,
     @Json(name = "original_language")
-    var originalLanguage: String?,
+    var originalLanguage: String? = null,
     @Json(name = "original_title")
-    var originalTitle: String?,
+    var originalTitle: String? = null,
     @Json(name = "overview")
-    var overview: String?,
+    var overview: String? = null,
     @Json(name = "popularity")
-    var popularity: Double?,
+    var popularity: Double? = null,
     @Json(name = "poster_path")
-    var posterPath: String?,
+    var poster_path: String? = null,
     @Json(name = "release_date")
-    var releaseDate: String?,
+    var releaseDate: String? = null,
     @Json(name = "title")
-    var title: String?,
+    var title: String? = null,
     @Json(name = "video")
-    var video: Boolean?,
+    var video: Boolean? = null,
     @Json(name = "vote_average")
-    var voteAverage: Double?,
+    var voteAverage: Double? = null,
     @Json(name = "vote_count")
-    var voteCount: Int?
+    var voteCount: Int? = null
 )

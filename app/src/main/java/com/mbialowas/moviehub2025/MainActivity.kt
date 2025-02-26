@@ -13,18 +13,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+
 import com.mbialowas.moviehub2025.Navigation.BottomNav
 import com.mbialowas.moviehub2025.api.MoviesManager
+import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.destinations.Destination
 import com.mbialowas.moviehub2025.screens.MovieScreen
-import com.mbialowas.moviehub2025.screens.SearchScreen
-import com.mbialowas.moviehub2025.screens.WatchScreen
+import com.mbialowas.moviehub2025.screens.*
 import com.mbialowas.moviehub2025.ui.theme.MovieHub2025Theme
 
 class MainActivity : ComponentActivity() {
@@ -34,10 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieHub2025Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    //MovieScreen(modifier = Modifier.padding(innerPadding))
                     val navController = rememberNavController()
-
-                    //fetch me some  movies
                     val moviesManager = MoviesManager()
 
                     App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager)
@@ -48,34 +44,36 @@ class MainActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, moviesManager: MoviesManager){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager){
     Scaffold(
         topBar = {
             TopAppBar(
-                title={ Text("MovieHub Project 2025")}
+                title = { Text("MovieHub 2025") }
             )
         },
-        bottomBar = {
-            BottomNav(navController = navController) }
-    ){ paddingValues->
+        bottomBar = { BottomNav(navController = navController) }
+    ){ paddingValues ->
         paddingValues.calculateBottomPadding()
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(paddingValues))
         NavHost(
-            navController = navController as NavHostController,
-            startDestination = Destination.Movie.route
-        ) {
-
-            composable(Destination.Movie.route) {
-                MovieScreen(modifier, moviesManager)
-            }
-            composable(Destination.Search.route) {
-                SearchScreen()
+            navController = navController as NavHostController, startDestination = Destination.Movie.route
+        ){
+            composable(Destination.Movie.route){
+                MovieScreen(navController = navController, moviesManager = moviesManager)
             }
             composable(Destination.Watch.route) {
                 WatchScreen()
             }
+            composable(Destination.Search.route) {
+                SearchScreen()
+            }
+            composable(Destination.MovieDetail.route){
+                val movie = Movie(title="Fake Movie", overview="This is a much better movie than Wicked!", poster_path = "fake.png")
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie)
 
+            }
         }
+
     }
 }
 

@@ -9,5 +9,6 @@ data class MovieData(
     @Json(name = "page")
     var page: Int?,
     @Json(name = "results")
-    var results: List<Movie?>?
+    var results: List<Movie>,
+
 )

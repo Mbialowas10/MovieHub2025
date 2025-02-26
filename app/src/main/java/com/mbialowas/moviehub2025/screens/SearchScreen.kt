@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
@@ -21,10 +22,9 @@ fun SearchScreen(){
         Text(
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            textAlign =  TextAlign.Center,
+            textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.Center),
-            text="Search Screen"
+            text = "Search Screen"
         )
     }
-
 }

@@ -17,7 +17,8 @@ object Api {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)
         .build()
-    val retrofitService: MoviesService by lazy {
-        retrofit.create(MoviesService::class.java)
+
+    val retrofitService: MovieService by lazy {
+        retrofit.create(MovieService::class.java)
     }
 }
