@@ -21,8 +21,9 @@ class MoviesManager(database: AppDatabase) {
         @Composable get() = remember {
             _moviesResponse
         }
+    private val db = database
     init{
-        getMovies(database)
+        getMovies(db)
     }
     private fun  getMovies(database:AppDatabase){
         val service = Api.retrofitService.getTrendingMovies(api_key)
@@ -56,5 +57,11 @@ class MoviesManager(database: AppDatabase) {
 
     private suspend fun saveDataToDatabase(database: AppDatabase, movies: List<Movie>) {
         database.movieDoa().insertAllMovies(movies)
+    }
+
+    suspend fun refreshMovies(){
+        var movies = db.movieDoa().getAllMovies()
+        _moviesResponse.value = movies
+
     }
 }
