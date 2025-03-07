@@ -30,6 +30,7 @@ class MoviesManager(database: AppDatabase) {
         getMovies(db)
     }
     private fun  getMovies(database:AppDatabase){
+        Log.i("api_key", api_key)
         val service = Api.retrofitService.getTrendingMovies(api_key)
 
         service.enqueue(object : retrofit2.Callback<MovieData>{
