@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -81,171 +82,36 @@ fun MovieCard(
     db: AppDatabase,
     moviesManager: MoviesManager
 ) {
-    var showDialog by remember {mutableStateOf(false)}
-    var showEditDialog by remember {mutableStateOf(false)}
+
     Column(
         modifier = Modifier
             .border(1.dp, Color.Red, shape = RoundedCornerShape(10.dp))
             .padding(5.dp)
+            .fillMaxWidth()
             .clickable {
-                Log.i("MovieCard", "Clicked ${movieItem.title}")
-                Log.i("MovieCard", "Clicked ${movieItem.id}")
                 navController.navigate("movieDetail/${movieItem.id}")
             }
-    ) {
+    ){
         Row(
             modifier = Modifier
-                .background(Color.DarkGray)
+                .background(color = Color.DarkGray)
                 .fillMaxWidth()
                 .padding(5.dp)
-        ) {
-            // import another library
+        ){
             AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 model = ImageRequest.Builder(
                     LocalContext.current
-                ).data("https://image.tmdb.org/t/p/w500${movieItem.poster_path}")
+                ).data("https://image.tmdb.org/t/p/w500/${movieItem.poster_path}")
                     .build(),
-                contentDescription = movieItem.overview
-            )
-            Button(
-                onClick = {
-                    showEditDialog = true // show the editDialog
-                }
-            ) {
-                // trigger dialog if true
-                Text(text = "Edit")
-            }
-            Button(
-                onClick = {
-                    showDialog = true
-                }
-            ) {
-                // trigger dialog if true
-                Text(text = "Delete")
-            }
-        }
-        // show DeleteMovieDialog when showDialog is true
-        if (showDialog) {
-            DeleteMovieDialog(
-                movie = movieItem,
-                onDismiss = { showDialog = false },
-                onConfirmDelete = {
-                    // delete the movie
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // call our call dao delete function
-                        db.movieDoa().deleteMovie(movieItem)
-
-                        // refresh the movie screen
-                        moviesManager.refreshMovies()
-                    }
-                    showDialog = false
-                }
-            )
-        } // END showDialog
-        if (showEditDialog) {
-            EditMovieDialog(
-                movie = movieItem,
-                onDismiss = { showEditDialog = false },
-                onConfirmEdit = { newTitle, newDescription ->
-                    CoroutineScope(Dispatchers.IO).launch {
-                        movieItem.id?.let{
-                            // update movie in Database
-                            db.movieDoa().updateMovie(it, newTitle, newDescription)
-
-                            // refresh the list
-                            moviesManager.refreshMovies()
-                        }
-                        showEditDialog = false
-                    }
-                }
+                contentDescription = movieItem.overview,
+                contentScale = ContentScale.FillWidth
             )
         }
     }
+
 } // END MovieCard
-@Composable
-fun DeleteMovieDialog(
-    movie: Movie?,
-    onDismiss: () -> Unit,
-    onConfirmDelete: () -> Unit
-) {
-    if (movie != null) {
-        AlertDialog(
-            onDismissRequest = { onDismiss() },
-            title = { Text(text = "Delete Movie") },
-            text = { Text("Are you sure you want to delete ${movie.title}?") },
-            confirmButton = {
-                TextButton(onClick = { onConfirmDelete() })
-                {
-                    Text(text = "Delete", color = Color.Red)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { onDismiss() }) {
-                    Text("Cancel", color = Color.Green)
-                }
 
-            }
-        )
-    }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditMovieDialog(
-    movie: Movie?,
-    onDismiss: () -> Unit,
-    onConfirmEdit: (String, String) -> Unit // Pass new title & description
-) {
-    if (movie != null) {
-        var newTitle by remember { mutableStateOf(movie.title) }
-        var newDescription by remember { mutableStateOf(movie.overview) }
-
-        AlertDialog(
-            onDismissRequest = { onDismiss() },
-            title = { Text(text = "Edit Movie") },
-            text = {
-                Column {
-                    Text(text = "Update movie details:")
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Title input field
-                    newTitle?.let {
-                        OutlinedTextField(
-                            value = it,
-                            onValueChange = { newTitle = it },
-                            label = { Text("Title") }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Description input field
-                    newDescription?.let {
-                        OutlinedTextField(
-                            value = it,
-                            onValueChange = { newDescription = it },
-                            label = { Text("Description") }
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { newTitle?.let { newDescription?.let { it1 ->
-                    onConfirmEdit(it,
-                        it1
-                    )
-                } } }) {
-                    Text("Save", color = Color.Green)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { onDismiss() }) {
-                    Text("Cancel")
-                }
-            }
-        )
-    }
-}
 
 
