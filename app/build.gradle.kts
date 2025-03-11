@@ -5,11 +5,15 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+// load TMDB API key from gradle.properties
+val tmdb_api_key: String? = project.findProperty("TMDB_API_KEY") as String?
+
 android {
     namespace = "com.mbialowas.moviehub2025"
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdb_api_key\"")
         applicationId = "com.mbialowas.moviehub2025"
         minSdk = 24
         targetSdk = 34
@@ -37,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
