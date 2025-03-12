@@ -67,7 +67,7 @@ fun MovieScreen(
         val movies = moviesManager.moviesResponse.value
         LazyColumn{
             items(movies){movie ->
-                MovieCard(movieItem = movie, navController = navController, db, moviesManager)
+                MovieCard(movieItem = movie, navController = navController, )
                 Log.i("HTTP:", "https://image.tmdb.org/t/p/w500${movie.poster_path }")
             }
         }
@@ -78,9 +78,9 @@ fun MovieScreen(
 @Composable
 fun MovieCard(
     movieItem: Movie,
-    navController: NavHostController,
-    db: AppDatabase,
-    moviesManager: MoviesManager
+    navController: NavHostController
+    //db: AppDatabase,
+    //moviesManager: MoviesManager
 ) {
 
     Column(
