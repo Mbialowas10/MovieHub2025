@@ -18,6 +18,7 @@ class MoviesManager(database: AppDatabase) {
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
 
     val api_key =  BuildConfig.TMDB_API_KEY
+
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {
             _moviesResponse
@@ -27,6 +28,7 @@ class MoviesManager(database: AppDatabase) {
         getMovies(db)
     }
     private fun  getMovies(database:AppDatabase){
+        Log.i("API_KEY", api_key)
         val service = Api.retrofitService.getTrendingMovies(api_key)
 
         service.enqueue(object : retrofit2.Callback<MovieData>{
