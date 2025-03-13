@@ -72,7 +72,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
             navController = navController as NavHostController, startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(modifier = Modifier.padding(paddingValues),navController = navController, moviesManager = moviesManager)
+                MovieScreen(modifier = Modifier.padding(paddingValues),navController = navController, moviesManager = moviesManager, db = db)
             }
             composable(Destination.Watch.route) {
                 WatchScreen()

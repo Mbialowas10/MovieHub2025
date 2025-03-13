@@ -16,14 +16,15 @@ import retrofit2.Response
 
 class MoviesManager(database: AppDatabase) {
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
-
-    val api_key = "aaed4e12019db7b90c9cebd9c1082790"
+    private val db = database
+    val api_key = "2d9b78634e06b5d86ce6c57e14ea2b66"
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {
             _moviesResponse
         }
+
     init{
-        getMovies(database)
+        getMovies(db)
     }
     @OptIn(DelicateCoroutinesApi::class)
     private fun  getMovies(database: AppDatabase){
@@ -58,5 +59,10 @@ class MoviesManager(database: AppDatabase) {
     }
     private suspend fun saveDataToDatabase(database: AppDatabase, movies: List<Movie>){
         database.movieDao().insertAll(movies)
+    }
+
+    suspend fun refreshMovies(){
+        var movies = db.movieDao().getAllMovies()
+        _moviesResponse.value = movies
     }
 }
