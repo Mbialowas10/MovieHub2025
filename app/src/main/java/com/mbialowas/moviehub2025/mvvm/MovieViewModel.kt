@@ -26,6 +26,28 @@ class MovieViewModel : ViewModel() {
     // search term
     val searchTerm = mutableStateOf("")
 
+    // icon state
+    var movieIconState = mutableStateOf<Map<Int, Boolean>>(emptyMap())
+
+    // set movie icon state
+    @OptIn(DelicateCoroutinesApi::class)
+    fun updateMovieIconState(movieId: Int, database: AppDatabase) {
+        GlobalScope.launch {
+            val movie = database.movieDoa().getMovieById(movieId)
+
+            if (movie != null) {
+                movie.isFavorite = !movie.isFavorite
+                database.movieDoa().updateMovieFavorite(movie)
+
+                movieIconState.value = movieIconState.value.toMutableMap().apply {
+                    this[movieId] = movie.isFavorite
+                }
+            } else {
+                Log.e("MovieViewModel", "Movie with ID $movieId not found in database!")
+            }
+        }
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     fun searchMovies(movieName:String, database: AppDatabase){
         // api call

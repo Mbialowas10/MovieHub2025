@@ -1,6 +1,8 @@
 package com.mbialowas.moviehub2025.screens
 
+import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +40,7 @@ import coil3.request.ImageRequest
 import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
+import com.mbialowas.moviehub2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,12 +50,17 @@ fun MovieDetailScreen(
     movie: Movie,
     modifier: Modifier,
     moviesManager: MoviesManager,
-    db: AppDatabase
+    db: AppDatabase,
+    viewModel: MovieViewModel
 ){
-    //
-    val isIconChanged = false;
+    // state level variables
     var showDialog by remember {mutableStateOf(false)}
     var showEditDialog by remember {mutableStateOf(false)}
+    // farvorite icon state
+    var isIconChanged by remember { mutableStateOf(viewModel.movieIconState.value[movie.id] ?: false) } //viewmodel state viewModel.movieIconState.value[movie.id] ?: false
+    //var isIconChanged by remember { mutableStateOf(false) } //non-viewmodel state
+    // Get the current context
+    val context = LocalContext.current
 
     movie.originalTitle?.let { Log.i("Movie", it)}
     Box(
@@ -95,6 +103,10 @@ fun MovieDetailScreen(
                 Button(
                     onClick = {
                         Log.i("Button", "Button Clicked")
+                        isIconChanged = !isIconChanged // toggle UI state
+                        viewModel.updateMovieIconState(movie.id!!, db)
+
+
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)

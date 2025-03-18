@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 // load TMDB API key from gradle.properties
@@ -60,6 +61,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.common)
+    implementation(libs.firebase.firestore)
     annotationProcessor(libs.androidx.room.room.compiler)
     ksp("androidx.room:room-compiler:2.6.1")
 
