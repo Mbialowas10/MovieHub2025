@@ -108,14 +108,14 @@ fun SearchScreen(modifier: Modifier, viewModel: MovieViewModel, database: AppDat
                     .fillMaxWidth()
                     .height(10.dp)
             )
-            for (movie in viewModel.movies.value){
-                LazyColumn{
-                    items(viewModel.movies.value){
-                        MovieCard(movie, navController)
+            for (movie in viewModel.movies.value) {
+                LazyColumn {
+                    items(viewModel.movies.value) { movie ->
+                        MovieCard(movieItem = movie, navController = navController)
                     }
-
                 }
             }
+
         }
     }
 }
