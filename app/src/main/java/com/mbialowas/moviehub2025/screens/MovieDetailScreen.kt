@@ -38,6 +38,7 @@ import coil3.request.ImageRequest
 import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
+import com.mbialowas.moviehub2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,12 +48,14 @@ fun MovieDetailScreen(
     movie: Movie,
     modifier: Modifier,
     moviesManager: MoviesManager,
-    db: AppDatabase
+    db: AppDatabase,
+    viewModel: MovieViewModel
 ){
-    //
-    val isIconChanged = false;
+    // state level variables
     var showDialog by remember {mutableStateOf(false)}
     var showEditDialog by remember {mutableStateOf(false)}
+
+    var isIconChanged by remember { mutableStateOf(viewModel.movieIconState.value[movie.id] ?: false) }
 
     movie.originalTitle?.let { Log.i("Movie", it)}
     Box(
@@ -94,6 +97,8 @@ fun MovieDetailScreen(
                 )
                 Button(
                     onClick = {
+                        isIconChanged = !isIconChanged // toggle the icon
+                        viewModel.updateMovieIconState(movie.id!!, db)
                         Log.i("Button", "Button Clicked")
                     },
                     modifier = Modifier

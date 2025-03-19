@@ -23,6 +23,9 @@ class MovieViewModel : ViewModel() {
 
     val movies = mutableStateOf<List<Movie>>(emptyList())
 
+    // icon state
+    var movieIconState = mutableStateOf<Map<Int, Boolean>>(emptyMap())
+
     // search term
     val searchTerm = mutableStateOf("")
 
@@ -62,4 +65,30 @@ class MovieViewModel : ViewModel() {
     fun saveSearchTerm(term:String){
         searchTerm.value = term
     }
+
+    /*
+     * Purpose - set movie icon state
+     * @params movieID: Int - this represent the identifier for movie
+     * @params isFavorite: Boolean - the state of the icon either true or false
+     * @return unit
+     */
+    fun updateMovieIconState (movieId: Int, database: AppDatabase){
+        // fetch the data from the database
+        GlobalScope.launch {
+            val movie = database.movieDoa().getMovieById(movieId)
+
+            if (movie != null) {
+                movie.isFavorite = !movie.isFavorite
+                // update movie in the database
+                database.movieDoa().updateMovieFavorite(movie)
+
+                movieIconState.value = movieIconState.value.toMutableMap().apply{
+                    this[movieId] = movie.isFavorite
+                }
+            }else{
+                Log.e("MovieViewModel", "Movie with ID $movieId not found in database")
+            }
+        }
+    }
+
 }

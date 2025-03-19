@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "246628013479",
+    "project_id": "movie-hub-2025",
+    "storage_bucket": "movie-hub-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246628013479:android:b5f4eb9c1fae1251c1d282",
+        "android_client_info": {
+          "package_name": "com.mbialowas.moviehub2025"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6P_9Bsq2gaRRfmNYIEGM2S_mvGUwSMvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
