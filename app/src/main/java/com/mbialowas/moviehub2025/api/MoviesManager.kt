@@ -17,7 +17,7 @@ import retrofit2.Response
 class MoviesManager(database: AppDatabase) {
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
     private val db = database
-    val api_key = "2d9b78634e06b5d86ce6c57e14ea2b66"
+    val api_key = "705c90d7c1dc4b818dbfacd3697a647f"
     val moviesResponse: MutableState<List<Movie>>
         @Composable get() = remember {
             _moviesResponse

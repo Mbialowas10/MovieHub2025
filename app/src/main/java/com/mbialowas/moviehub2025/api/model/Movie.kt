@@ -39,5 +39,7 @@ data class Movie(
     @Json(name = "vote_average")
     var voteAverage: Double? = null,
     @Json(name = "vote_count")
-    var voteCount: Int? = null
+    var voteCount: Int? = null,
+    var isFavorite: Boolean = false
+
 )

@@ -17,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +29,7 @@ import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.destinations.Destination
+import com.mbialowas.moviehub2025.mvvm.MovieViewModel
 import com.mbialowas.moviehub2025.screens.MovieScreen
 import com.mbialowas.moviehub2025.screens.*
 import com.mbialowas.moviehub2025.ui.theme.MovieHub2025Theme
@@ -46,7 +49,10 @@ class MainActivity : ComponentActivity() {
                     val db = AppDatabase.getInstance(applicationContext)
                     val moviesManager = MoviesManager(db)
 
-                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager,db)
+                    // initialize viewModel
+                    val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
+
+                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager,db, viewModel)
                 }
             }
         }
@@ -54,7 +60,7 @@ class MainActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase,viewModel: MovieViewModel){
     var movie by remember {
         mutableStateOf<Movie?>(null)
     }
@@ -87,7 +93,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                         movie = db.movieDao().getMovieById(movie_id.toInt())
                     }
                 }
-                movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db ) }
+                movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db, moviesManager = moviesManager, viewModel = viewModel) }
 
             }
         }
