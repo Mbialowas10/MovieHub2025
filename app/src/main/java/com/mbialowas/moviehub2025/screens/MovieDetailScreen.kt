@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,10 +53,12 @@ fun MovieDetailScreen(
     db: AppDatabase,
     viewModel: MovieViewModel
 ){
-    //
-    var isIconChanged by remember { mutableStateOf( viewModel.movieIconState.value[movie.id] ?: false) } // default value is false;
+    // state level variables
     var showDialog by remember {mutableStateOf(false)}
     var showEditDialog by remember {mutableStateOf(false)}
+    //var isIconChanged by remember { mutableStateOf( viewModel.movieIconState.value[movie.id] ?: false) } // default value is false;
+    val iconState by viewModel.movieIconState.collectAsState() // Observe state from ViewModel
+    var isIconChanged = iconState[movie.id] ?: false // Get the latest state
 
     movie.originalTitle?.let { Log.i("Movie", it)}
     Box(
@@ -97,9 +100,10 @@ fun MovieDetailScreen(
                 )
                 Button(
                     onClick = {
-                        Log.i("Button", "Button Clicked")
-                        viewModel.updateMovieIconState(movie.id!!, db)
+
                         isIconChanged = !isIconChanged
+                        viewModel.updateMovieIconState(movie.id!!, db)
+                        Log.i("Button", "Button Clicked")
                         // toggle the value of button
                         Log.i("MovieID", movie.id.toString())
 

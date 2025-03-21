@@ -30,7 +30,7 @@ interface MovieDao {
     fun updateMovie(movieID: Int, title: String, overview: String)
 
     @Update
-    fun updateMovieState(movie: Movie)
+    suspend fun updateMovieState(movie: Movie)
 
     // retrieve all movies
     @Query("SELECT * FROM movies")
