@@ -66,7 +66,7 @@ class MovieViewModel : ViewModel() {
         searchTerm.value = term
     }
 
-    /*
+    /**
      * Purpose - set movie icon state
      * @params movieID: Int - this represent the identifier for movie
      * @params isFavorite: Boolean - the state of the icon either true or false

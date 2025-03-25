@@ -23,6 +23,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 import com.mbialowas.moviehub2025.Navigation.BottomNav
 import com.mbialowas.moviehub2025.api.MoviesManager
@@ -51,8 +54,11 @@ class MainActivity : ComponentActivity() {
                     // initialize the viewModel
                     val viewModel: MovieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
 
+                    // initialize the firestore db
+                    val fs_db = Firebase.firestore
 
-                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager, db, viewModel)
+
+                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager, db, viewModel, fs_db)
                 }
             }
         }
@@ -61,7 +67,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase, viewModel: MovieViewModel){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase, viewModel: MovieViewModel, fs_db: FirebaseFirestore){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,7 +85,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                 MovieScreen(modifier = Modifier.padding(paddingValues),navController = navController, moviesManager = moviesManager, db = db)
             }
             composable(Destination.Watch.route) {
-                WatchScreen()
+                WatchScreen(navController = navController)
             }
             composable(Destination.Search.route) {
                 SearchScreen(modifier = Modifier.padding(paddingValues), viewModel = viewModel, db, navController)
@@ -97,7 +103,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= movie!!, moviesManager = moviesManager, db = db, viewModel = viewModel)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= movie!!, moviesManager = moviesManager, db = db, viewModel = viewModel, fs_db = fs_db)
                 }
 
                 //MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie)
