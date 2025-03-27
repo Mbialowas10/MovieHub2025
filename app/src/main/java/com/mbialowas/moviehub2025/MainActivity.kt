@@ -84,7 +84,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                 WatchScreen()
             }
             composable(Destination.Search.route) {
-                SearchScreen()
+                SearchScreen(modifier = Modifier.padding(paddingValues), viewModel = viewModel, database = db, navController = navController, moviesManager= moviesManager )
             }
             composable(Destination.MovieDetail.route){ navBackStackEntry ->
                 val movie_id: String? = navBackStackEntry.arguments?.getString("movieID")
