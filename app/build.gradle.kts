@@ -19,7 +19,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        manifestPlaceholders["MAPS_API_KEY"] = "AIzaSyAKSZwM4WKmUDJYIYFU9unr9KUeX0W1mLg"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -46,6 +46,19 @@ android {
 }
 
 dependencies {
+
+    //google maps
+    implementation(libs.play.services.maps.v1820)  // Google Maps
+    implementation(libs.play.services.location) // Location Services
+    implementation(libs.places.v330) // Places API
+
+    // accompanist permissions
+    implementation(libs.accompanist)
+
+    // google maps composable
+    implementation(libs.google.maps.sdk) // Google Maps SDK
+    implementation(libs.maps.compose)    // Compose Maps Library
+    implementation (libs.androidx.compose.material)
 
     // moshi
     implementation(libs.moshi.kotlin)

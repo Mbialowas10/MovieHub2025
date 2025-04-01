@@ -1,5 +1,6 @@
 package com.mbialowas.moviehub2025
 
+import MapScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,7 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
+
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -94,7 +95,9 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                     }
                 }
                 movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db, moviesManager = moviesManager, viewModel = viewModel) }
-
+            }
+            composable(Destination.MapScreen.route) {
+                MapScreen(modifier = Modifier.padding(paddingValues))
             }
         }
 
