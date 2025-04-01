@@ -48,6 +48,24 @@ android {
 
 dependencies {
 
+    //google maps
+    implementation(libs.play.services.maps.v1820)  // Google Maps
+    implementation(libs.play.services.location) // Location Services
+    implementation(libs.places.v330) // Places API
+
+    // accompanist permissions
+    implementation(libs.accompanist)
+
+    // google maps composable
+    implementation(libs.google.maps.sdk) // Google Maps SDK
+    implementation(libs.maps.compose)    // Compose Maps Library
+    implementation (libs.androidx.compose.material) // Had to add bc or Marker composable
+
+    // google play services
+    implementation(libs.play.services.maps)
+
+
+
     // moshi
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
