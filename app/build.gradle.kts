@@ -61,8 +61,9 @@ dependencies {
     implementation(libs.maps.compose)    // Compose Maps Library
     implementation (libs.androidx.compose.material) // Had to add bc or Marker composable
 
-    // google play services
-    implementation(libs.play.services.maps)
+
+
+    implementation(libs.play.services.location)
 
 
 
@@ -80,8 +81,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.common)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.media3.common.ktx)
     annotationProcessor(libs.androidx.room.room.compiler)
     ksp("androidx.room:room-compiler:2.6.1")
+
 
 
     implementation(libs.androidx.core.ktx)

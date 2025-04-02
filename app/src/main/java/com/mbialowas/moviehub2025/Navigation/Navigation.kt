@@ -20,6 +20,7 @@ fun BottomNav(navController: NavController) {
         val ic_movie = painterResource(id = R.drawable.ic_movie)
         val ic_watch = painterResource(id = R.drawable.ic_watch)
         val ic_search = painterResource(id = R.drawable.ic_search)
+        val ic_map = painterResource(id = R.drawable.ic_map)
 
         NavigationBarItem(
             selected = currentDestination?.route == Destination.Movie.route,
@@ -48,5 +49,15 @@ fun BottomNav(navController: NavController) {
             icon = { Icon(painter = ic_watch, contentDescription = null)},
             label = { Text(text = Destination.Watch.route) }
         ) // end watch
+        NavigationBarItem(
+            selected = currentDestination?.route == Destination.MapScreen.route,
+            onClick = { navController.navigate(Destination.MapScreen.route) {
+                popUpTo(Destination.MapScreen.route)
+                launchSingleTop = true
+            }},
+            icon = { Icon(painter = ic_map, contentDescription = null)},
+            label = { Text(text = Destination.MapScreen.route) }
+        ) // end mapscreen
+
     }
 }
