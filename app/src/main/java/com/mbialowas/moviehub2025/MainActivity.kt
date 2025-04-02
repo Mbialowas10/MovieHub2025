@@ -23,6 +23,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 import com.mbialowas.moviehub2025.Navigation.BottomNav
 import com.mbialowas.moviehub2025.api.MoviesManager
@@ -52,7 +55,10 @@ class MainActivity : ComponentActivity() {
                     // initialize viewModel
                     val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
 
-                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager,db, viewModel)
+                    // initialize fb
+                    val fs_db = Firebase.firestore
+
+                    App(navController = navController, modifier = Modifier.padding(innerPadding), moviesManager,db, viewModel,fs_db)
                 }
             }
         }
@@ -60,7 +66,7 @@ class MainActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase,viewModel: MovieViewModel){
+fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesManager: MoviesManager, db:AppDatabase,viewModel: MovieViewModel, fs_db: FirebaseFirestore){
     var movie by remember {
         mutableStateOf<Movie?>(null)
     }
@@ -93,7 +99,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                         movie = db.movieDao().getMovieById(movie_id.toInt())
                     }
                 }
-                movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db, moviesManager = moviesManager, viewModel = viewModel) }
+                movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db, moviesManager = moviesManager, viewModel = viewModel, fs_db = fs_db) }
 
             }
         }

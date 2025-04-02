@@ -37,13 +37,18 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mbialowas.moviehub2025.api.MoviesManager
 import com.mbialowas.moviehub2025.api.db.AppDatabase
 import com.mbialowas.moviehub2025.api.model.Movie
 import com.mbialowas.moviehub2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun MovieDetailScreen(
@@ -51,7 +56,8 @@ fun MovieDetailScreen(
     modifier: Modifier,
     moviesManager: MoviesManager,
     db: AppDatabase,
-    viewModel: MovieViewModel
+    viewModel: MovieViewModel,
+    fs_db: FirebaseFirestore
 ){
     // state level variables
     var showDialog by remember {mutableStateOf(false)}
@@ -59,6 +65,9 @@ fun MovieDetailScreen(
     //var isIconChanged by remember { mutableStateOf( viewModel.movieIconState.value[movie.id] ?: false) } // default value is false;
     val iconState by viewModel.movieIconState.collectAsState() // Observe state from ViewModel
     var isIconChanged = iconState[movie.id] ?: false // Get the latest state
+
+    var lastInsertedDocumentId by remember { mutableStateOf<DocumentReference?>(null) }
+
 
     movie.originalTitle?.let { Log.i("Movie", it)}
     Box(
@@ -106,6 +115,51 @@ fun MovieDetailScreen(
                         Log.i("Button", "Button Clicked")
                         // toggle the value of button
                         Log.i("MovieID", movie.id.toString())
+                        var movieExists: Boolean? = null
+
+                        // interaction with firebase firestore database
+                        val collection: CollectionReference = FirebaseFirestore.getInstance().collection("movies")
+                        val m = hashMapOf(
+                            "movie_id" to "${movie.id}",
+                            "movie_title" to "${movie.title}",
+                            "movie_overview" to "${movie.overview}",
+                            "movie_poster_path" to "${movie.poster_path}",
+                            "movie_release_date" to "${movie.releaseDate}",
+                            "movie_vote_average" to "${movie.voteAverage}",
+                            "movie_vote_count" to "${movie.voteCount}",
+                            "isFavorite" to "${movie.isFavorite}"
+                        )
+                        // global scope to run coroutine
+                        GlobalScope.launch {
+                           // safe checking
+                            movieExists = doesMovieExist(movie.id!!, collection)
+                            if (isIconChanged) {
+                                if (movieExists == true){
+                                    Log.d("FS", "Sorry you can't insert the same, try again.")
+                                }else{
+                                    fs_db.collection("movies").add(m)
+                                        .addOnSuccessListener { documentReference ->
+                                            lastInsertedDocumentId = documentReference
+                                            Log.d("FS", "DocumentSnapshot added with ID: ${documentReference.id}")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w("FS", "Error adding document", e)
+                                        }
+                                }
+                            }else if(isIconChanged == false) {
+                                lastInsertedDocumentId?.delete()
+                                    ?.addOnSuccessListener {
+                                        Log.d(
+                                            "FS",
+                                            "DocumentSnapshot successfully deleted!"
+                                        )
+                                    }
+                                    ?.addOnFailureListener { e ->
+                                        Log.i("Removal", "THERE WAS A PROBLEM REMOVING THE DOCUMENT FROM FIREBASE ${e.message}")
+                            }
+
+                            }
+                        }
 
                     },
                     modifier = Modifier
@@ -178,58 +232,70 @@ fun MovieDetailScreen(
             } // end box
 
             Column(Modifier.padding(20.dp)){
-                Spacer(modifier = Modifier.padding(5.dp))
-                movie.releaseDate?.let {
-                    Text(
-                        text= "Release Date: $it",
-                        modifier = Modifier.padding(end=5.dp),
-                        maxLines = 1,
-                        fontSize = 12.sp,
-                        overflow= TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.labelLarge,
-                        color=Color.White
-                    )
-                    Spacer(modifier = Modifier.padding(5.dp))
-                    movie.overview?.let {
-                        Text(
-                            text= it,
-                            modifier = Modifier.padding(end=8.dp),
-                            maxLines = 3,
-                            fontSize = 16.sp,
-                            overflow= TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color=Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(5.dp))
-                    Row{
-                        movie.voteAverage?.let{
+                        Spacer(modifier = Modifier.padding(5.dp))
+                        movie.releaseDate?.let {
                             Text(
-                                text= "Avg Vote: $it",
-                                modifier = Modifier.padding(end=8.dp),
+                                text = "Release Date: $it",
+                                modifier = Modifier.padding(end = 5.dp),
                                 maxLines = 1,
-                                fontSize = 20.sp,
-                                overflow= TextOverflow.Ellipsis,
+                                fontSize = 12.sp,
+                                overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.labelLarge,
-                                color=Color.White
+                                color = Color.White
                             )
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            movie.overview?.let {
+                                Text(
+                                    text = it,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    maxLines = 3,
+                                    fontSize = 16.sp,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = Color.White
+                                )
+                            }
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            Row {
+                                movie.voteAverage?.let {
+                                    Text(
+                                        text = "Avg Vote: $it",
+                                        modifier = Modifier.padding(end = 8.dp),
+                                        maxLines = 1,
+                                        fontSize = 20.sp,
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = Color.White
+                                    )
+                                }
+                                movie.voteCount?.let {
+                                    Text(
+                                        text = "# of votes: $it",
+                                        modifier = Modifier.padding(end = 8.dp),
+                                        maxLines = 1,
+                                        fontSize = 20.sp,
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = Color.White
+                                    )
+                                }
+                            }
                         }
-                        movie.voteCount?.let{
-                            Text(
-                                text= "# of votes: $it",
-                                modifier = Modifier.padding(end=8.dp),
-                                maxLines = 1,
-                                fontSize = 20.sp,
-                                overflow= TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelLarge,
-                                color=Color.White
-                            )
-                        }
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-            }
+
         }
     }
 
+}
+
+/**
+ * Checks if a movie with the given ID exists in the Firestore collection.
+ * @params movieID: Int - The ID of the movie to check.
+ * @params collection: CollectionReference - The Firestore collection to search in.
+ * @return Boolean - True if the movie exists, false otherwise.
+ */
+suspend fun doesMovieExist(movieID: Int, collection: CollectionReference): Boolean {
+    val querySnapshot = collection.whereEqualTo("movie_id", movieID).get().await()
+    return !querySnapshot.isEmpty
 }
