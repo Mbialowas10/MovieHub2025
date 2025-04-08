@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MovieHub2025</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
 </resources>

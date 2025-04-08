@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -39,6 +40,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.mbialowas.moviehub2025.mvvm.MapViewModel
 import java.util.jar.Manifest
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
@@ -48,7 +50,7 @@ fun MapScreen(
     val theaters by viewModel.theaters.collectAsState()
     val location = LatLng(49.839112, -97.211510) // San Francisco coordinates
 
-    val api_key="AIzaSyAKSZwM4WKmUDJYIYFU9unr9KUeX0W1mLg"
+    val api_key="AIzaSyDQPlXaf6yFuApJoHw1w5oZcNC6utCdfSc"
 
 
 
@@ -63,7 +65,7 @@ fun MapScreen(
         if (permissionState.status.isGranted) {
             val location = LatLng(49.839112, -97.211510) // Winnipeg coordinates
             viewModel.fetchNearbyTheaters(location, api_key)
-            //Log.i("Places", "Initialized")
+            Log.i("Places", "Initialized")
         } else {
             permissionState.launchPermissionRequest()
         }
