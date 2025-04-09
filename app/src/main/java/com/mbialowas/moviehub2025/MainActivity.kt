@@ -107,7 +107,7 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                 }
             }
             composable(Destination.MapScreen.route){
-                //MapScreen(modifier = Modifier.padding(paddingValues))
+                MapScreen(modifier = Modifier.padding(paddingValues))
             }
         }
 
