@@ -102,6 +102,9 @@ fun App(navController: NavHostController, modifier: Modifier = Modifier, moviesM
                 movie?.let { MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie= it, db=db, moviesManager = moviesManager, viewModel = viewModel, fs_db = fs_db) }
 
             }
+            composable(Destination.MapScreen.route) {
+                MapScreen(modifier = Modifier.padding(paddingValues))
+            }
         }
 
     }

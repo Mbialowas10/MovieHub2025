@@ -48,5 +48,14 @@ fun BottomNav(navController: NavController) {
             icon = { Icon(painter = ic_watch, contentDescription = null)},
             label = { Text(text = Destination.Watch.route) }
         ) // end watch
+        NavigationBarItem(
+            selected = currentDestination?.route == Destination.MapScreen.route,
+            onClick = { navController.navigate(Destination.MapScreen.route) {
+                popUpTo(Destination.MapScreen.route)
+                launchSingleTop = true
+            }},
+            icon = { Icon(painter = ic_watch, contentDescription = null)},
+            label = { Text(text = Destination.MapScreen.route) }
+        ) // end watch
     }
 }
