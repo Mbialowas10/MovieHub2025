@@ -37,6 +37,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.mbialowas.moviehub2025.BuildConfig
+
 import com.mbialowas.moviehub2025.mvvm.MapViewModel
 import java.util.jar.Manifest
 
@@ -50,7 +52,8 @@ fun MapScreen(
     val theaters by viewModel.theaters.collectAsState()
     val location = LatLng(49.839112, -97.211510) // San Francisco coordinates
 
-    val api_key="AIzaSyDQPlXaf6yFuApJoHw1w5oZcNC6utCdfSc"
+    //val api_key="AIzaSyCS0ESfKAY0wJnF8FVRjfxa4oMOM1rzRPo"
+    val api_key = BuildConfig.API_KEY
 
 
 
