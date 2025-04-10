@@ -14,6 +14,8 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        // Pass the API key to the manifest
+        manifestPlaceholders["googleMapsApiKey"] = project.findProperty("API_KEY") ?: "default_ke"
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdb_api_key\"")
         applicationId = "com.mbialowas.moviehub2025"
         minSdk = 24
@@ -25,6 +27,12 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            buildConfigField("String", "API_KEY", "${project.findProperty("API_KEY")}")
+        }
+        getByName("release") {
+            buildConfigField("String", "API_KEY", "${project.findProperty("API_KEY")}")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

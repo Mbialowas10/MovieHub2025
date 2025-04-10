@@ -36,6 +36,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.mbialowas.moviehub2025.BuildConfig
 import com.mbialowas.moviehub2025.mvvm.MapViewModel
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -46,10 +47,9 @@ fun MapScreen(
     val viewModel: MapViewModel = viewModel()
     val theaters by viewModel.theaters.collectAsState()
     val location = LatLng(49.8951, -97.1384) // Example location (Winnipeg)
-    val api_key = "AIzaSyDQPlXaf6yFuApJoHw1w5oZcNC6utCdfSc"
+    val api_key = BuildConfig.API_KEY
     // Fetch nearby theaters
     //viewModel.fetchNearbyTheaters(location, api_key)
-
     val context = LocalContext.current
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
